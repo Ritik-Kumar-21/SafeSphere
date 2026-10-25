@@ -91,6 +91,12 @@ def presentation():
     return render_template("presentation.html")
 
 
+@app.route("/presentation/print")
+def presentation_print():
+    """Renders the complete printable presentation deck (PDF format)."""
+    return render_template("presentation_print.html")
+
+
 @app.route("/api/download-pptx")
 def download_pptx():
     """Generates and serves the SafeSphere PowerPoint presentation."""
@@ -99,6 +105,16 @@ def download_pptx():
         import generate_ppt
         generate_ppt.build_presentation(pptx_path)
     return send_file(pptx_path, as_attachment=True, download_name="SafeSphere_EOC_Presentation.pptx")
+
+
+@app.route("/api/download-pdf")
+def download_pdf():
+    """Generates and serves the official SafeSphere PDF presentation."""
+    pdf_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "SafeSphere_EOC_Presentation.pdf")
+    if not os.path.exists(pdf_path):
+        import generate_pdf
+        generate_pdf.build_pdf(pdf_path)
+    return send_file(pdf_path, as_attachment=True, download_name="SafeSphere_EOC_Presentation.pdf")
 
 
 @app.route("/api/status", methods=["GET"])
