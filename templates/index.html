@@ -40,13 +40,17 @@
                 <span id="clock-time">00:00:00 IST</span>
             </div>
 
-            <div class="status-pill depth-indicator-pill" title="Hardware 3D Spatial Rendering & Parallax Physics Active">
+            <div class="status-pill depth-indicator-pill" id="btn-depth-pill" style="cursor: pointer;" title="Configure 3D Spatial Illusions & Physics">
                 <span class="depth-cube-3d"></span>
-                <span style="font-weight: 700; letter-spacing: 0.05em; color: var(--hazard-amber);">3D SPATIAL FX</span>
+                <span style="font-weight: 700; letter-spacing: 0.05em; color: var(--hazard-amber);">3D ILLUSIONS ▾</span>
             </div>
         </div>
 
         <div class="header-actions">
+            <button id="btn-open-3d-studio" class="btn-theme-pill" style="border-color: rgba(245, 158, 11, 0.45); color: var(--hazard-amber); font-weight: 700;" title="Configure 3D Spatial Illusions & Physics">
+                <span>🧊</span>
+                <span>3D Settings</span>
+            </button>
             <button id="btn-theme-toggle" class="btn-theme-pill" title="Switch Theme (Safe Sphere / Cyber Matrix / Polar Daylight)">
                 <span id="theme-icon">🌐</span>
                 <span id="theme-name">Safe Sphere</span>
@@ -472,6 +476,135 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-primary" onclick="document.getElementById('modal-log-detail').classList.remove('open')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         MODAL: 3D SPATIAL ILLUSIONS & PHYSICS STUDIO
+         ================================================================ -->
+    <div id="modal-3d-illusions" class="modal-backdrop">
+        <div class="modal-dialog modal-3d-dialog" style="max-width: 580px;">
+            <div class="modal-header">
+                <div class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.3rem;">🧊</span>
+                    <span>3D Spatial Illusions & Physics Studio</span>
+                </div>
+                <button type="button" class="modal-close" id="modal-3d-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">
+                    Calibrate real-time isometric angles, 3D smartphone elevation, specular glass reflections, cursor parallax sensitivity, radar wave cycles, and gyroscope orbital rings.
+                </p>
+
+                <!-- Calibration Presets -->
+                <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">
+                    Quick 3D Presets
+                </div>
+                <div class="studio-presets-row">
+                    <button type="button" class="btn-preset-3d" data-preset="hyper">🚀 Hyper 3D</button>
+                    <button type="button" class="btn-preset-3d active" data-preset="tactical">🛡️ Tactical (Default)</button>
+                    <button type="button" class="btn-preset-3d" data-preset="subtle">🧘 Subtle Depth</button>
+                    <button type="button" class="btn-preset-3d" data-preset="flat">📐 Flat 2D</button>
+                </div>
+
+                <!-- Sliders Grid -->
+                <div class="sliders-container" style="display: grid; gap: 14px; margin-top: 10px;">
+                    <!-- Slider 1: Cursor Parallax Scale -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Cursor Parallax Sensitivity</span>
+                            <span class="slider-val-badge" id="val-3d-parallax">1.0x</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-parallax" min="0" max="2.5" step="0.1" value="1.0">
+                    </div>
+
+                    <!-- Slider 2: Phone Yaw (H-Rotation) -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Phone Isometric Yaw (H-Angle)</span>
+                            <span class="slider-val-badge" id="val-3d-yaw">-8°</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-yaw" min="-30" max="30" step="1" value="-8">
+                    </div>
+
+                    <!-- Slider 3: Phone Pitch (V-Rotation) -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Phone Isometric Pitch (V-Angle)</span>
+                            <span class="slider-val-badge" id="val-3d-pitch">7°</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-pitch" min="-20" max="20" step="1" value="7">
+                    </div>
+
+                    <!-- Slider 4: Chassis Elevation (Z-Depth) -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Phone 3D Elevation (Z-Depth)</span>
+                            <span class="slider-val-badge" id="val-3d-elevation">16px</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-elevation" min="0" max="50" step="2" value="16">
+                    </div>
+
+                    <!-- Slider 5: Specular Glare & Sheen -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Glass Specular Glare & Sheen</span>
+                            <span class="slider-val-badge" id="val-3d-glare">80%</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-glare" min="0" max="100" step="5" value="80">
+                    </div>
+
+                    <!-- Slider 6: Radar Wave Frequency -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>3D Radar Wave Ripple Cycle</span>
+                            <span class="slider-val-badge" id="val-3d-radar">2.2s</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-radar" min="0.8" max="4.0" step="0.2" value="2.2">
+                    </div>
+
+                    <!-- Slider 7: Gyroscope Spin Duration -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Gyroscope Orbital Ring Speed</span>
+                            <span class="slider-val-badge" id="val-3d-gyro">4.0s</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-gyro" min="1.0" max="8.0" step="0.5" value="4.0">
+                    </div>
+
+                    <!-- Slider 8: Button Hydraulic Extrusion -->
+                    <div class="slider-control-group">
+                        <div class="slider-header">
+                            <span>Button Hydraulic Extrusion Depth</span>
+                            <span class="slider-val-badge" id="val-3d-btn">8px</span>
+                        </div>
+                        <input type="range" class="range-slider-3d" id="slider-3d-btn" min="3" max="16" step="1" value="8">
+                    </div>
+                </div>
+
+                <!-- Toggle Options -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" id="toggle-3d-floating" checked style="width: 15px; height: 15px; accent-color: var(--tactical-cyan);">
+                        <span>Floating 3D Bobbing</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" id="toggle-3d-gyro" checked style="width: 15px; height: 15px; accent-color: var(--tactical-cyan);">
+                        <span>Logo Gyro Spin</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button type="button" class="btn-secondary" id="btn-reset-3d-defaults" style="font-size: 0.8rem;">
+                    🔄 Reset Defaults
+                </button>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn-primary" onclick="document.getElementById('modal-3d-illusions').classList.remove('open')">
+                        Done
+                    </button>
+                </div>
             </div>
         </div>
     </div>

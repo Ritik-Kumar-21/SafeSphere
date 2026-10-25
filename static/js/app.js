@@ -95,6 +95,31 @@ document.addEventListener("DOMContentLoaded", () => {
         logDetailClose: document.getElementById("modal-log-detail-close"),
         logDetailContent: document.getElementById("log-detail-body"),
 
+        // 3D Illusion & Physics Studio Controls
+        btnOpen3DStudio: document.getElementById("btn-open-3d-studio"),
+        btnDepthPill: document.getElementById("btn-depth-pill"),
+        modal3DIllusions: document.getElementById("modal-3d-illusions"),
+        modal3DClose: document.getElementById("modal-3d-close"),
+        btnReset3DDefaults: document.getElementById("btn-reset-3d-defaults"),
+        toggle3DFloating: document.getElementById("toggle-3d-floating"),
+        toggle3DGyro: document.getElementById("toggle-3d-gyro"),
+        slider3DParallax: document.getElementById("slider-3d-parallax"),
+        val3DParallax: document.getElementById("val-3d-parallax"),
+        slider3DYaw: document.getElementById("slider-3d-yaw"),
+        val3DYaw: document.getElementById("val-3d-yaw"),
+        slider3DPitch: document.getElementById("slider-3d-pitch"),
+        val3DPitch: document.getElementById("val-3d-pitch"),
+        slider3DElevation: document.getElementById("slider-3d-elevation"),
+        val3DElevation: document.getElementById("val-3d-elevation"),
+        slider3DGlare: document.getElementById("slider-3d-glare"),
+        val3DGlare: document.getElementById("val-3d-glare"),
+        slider3DRadar: document.getElementById("slider-3d-radar"),
+        val3DRadar: document.getElementById("val-3d-radar"),
+        slider3DGyro: document.getElementById("slider-3d-gyro"),
+        val3DGyro: document.getElementById("val-3d-gyro"),
+        slider3DBtn: document.getElementById("slider-3d-btn"),
+        val3DBtn: document.getElementById("val-3d-btn"),
+
         toastContainer: document.getElementById("toast-container")
     };
 
@@ -174,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
         applyPreset("fire");
         updateSmsLengthMetrics();
         syncAudioButton();
+        init3DIllusionStudio();
         init3DParallaxTilt();
     }
 
@@ -200,6 +226,226 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ================================================================
+    // 3D SPATIAL ILLUSION & PHYSICS CALIBRATION STUDIO
+    // ================================================================
+    const DEFAULT_3D_SETTINGS = {
+        parallax: 1.0,
+        yaw: -8,
+        pitch: 7,
+        elevation: 16,
+        glare: 80,
+        radar: 2.2,
+        gyro: 4.0,
+        btnDepth: 8,
+        floating: true,
+        gyroSpin: true
+    };
+
+    const PRESETS_3D = {
+        hyper: {
+            parallax: 2.2,
+            yaw: -18,
+            pitch: 14,
+            elevation: 32,
+            glare: 100,
+            radar: 1.2,
+            gyro: 2.0,
+            btnDepth: 14,
+            floating: true,
+            gyroSpin: true
+        },
+        tactical: {
+            parallax: 1.0,
+            yaw: -8,
+            pitch: 7,
+            elevation: 16,
+            glare: 80,
+            radar: 2.2,
+            gyro: 4.0,
+            btnDepth: 8,
+            floating: true,
+            gyroSpin: true
+        },
+        subtle: {
+            parallax: 0.4,
+            yaw: -3,
+            pitch: 2,
+            elevation: 8,
+            glare: 40,
+            radar: 3.0,
+            gyro: 6.0,
+            btnDepth: 5,
+            floating: true,
+            gyroSpin: true
+        },
+        flat: {
+            parallax: 0.0,
+            yaw: 0,
+            pitch: 0,
+            elevation: 0,
+            glare: 0,
+            radar: 2.2,
+            gyro: 4.0,
+            btnDepth: 3,
+            floating: false,
+            gyroSpin: false
+        }
+    };
+
+    function init3DIllusionStudio() {
+        let saved = null;
+        try {
+            const raw = localStorage.getItem("safesphere_3d_fx");
+            if (raw) saved = JSON.parse(raw);
+        } catch (e) {
+            console.warn("Could not load 3D settings", e);
+        }
+
+        state.settings3D = Object.assign({}, DEFAULT_3D_SETTINGS, saved || {});
+
+        // Helper to update CSS variables and UI
+        function applySettings(settings, save = true) {
+            const root = document.documentElement;
+            root.style.setProperty("--3d-parallax-scale", settings.parallax);
+            root.style.setProperty("--3d-phone-yaw", `${settings.yaw}deg`);
+            root.style.setProperty("--3d-phone-pitch", `${settings.pitch}deg`);
+            root.style.setProperty("--3d-phone-elevation", `${settings.elevation}px`);
+            root.style.setProperty("--3d-glare-opacity", (settings.glare / 100).toFixed(2));
+            root.style.setProperty("--3d-radar-duration", `${settings.radar}s`);
+            root.style.setProperty("--3d-gyro-duration", `${settings.gyro}s`);
+            root.style.setProperty("--3d-btn-depth", `${settings.btnDepth}px`);
+            root.style.setProperty("--3d-phone-anim", settings.floating ? "phoneFloat3D 6s ease-in-out infinite alternate" : "none");
+            root.style.setProperty("--3d-gyro-state", settings.gyroSpin ? "running" : "paused");
+
+            // Sync controls
+            if (elements.slider3DParallax) elements.slider3DParallax.value = settings.parallax;
+            if (elements.val3DParallax) elements.val3DParallax.textContent = `${Number(settings.parallax).toFixed(1)}x`;
+
+            if (elements.slider3DYaw) elements.slider3DYaw.value = settings.yaw;
+            if (elements.val3DYaw) elements.val3DYaw.textContent = `${settings.yaw}°`;
+
+            if (elements.slider3DPitch) elements.slider3DPitch.value = settings.pitch;
+            if (elements.val3DPitch) elements.val3DPitch.textContent = `${settings.pitch}°`;
+
+            if (elements.slider3DElevation) elements.slider3DElevation.value = settings.elevation;
+            if (elements.val3DElevation) elements.val3DElevation.textContent = `${settings.elevation}px`;
+
+            if (elements.slider3DGlare) elements.slider3DGlare.value = settings.glare;
+            if (elements.val3DGlare) elements.val3DGlare.textContent = `${settings.glare}%`;
+
+            if (elements.slider3DRadar) elements.slider3DRadar.value = settings.radar;
+            if (elements.val3DRadar) elements.val3DRadar.textContent = `${Number(settings.radar).toFixed(1)}s`;
+
+            if (elements.slider3DGyro) elements.slider3DGyro.value = settings.gyro;
+            if (elements.val3DGyro) elements.val3DGyro.textContent = `${Number(settings.gyro).toFixed(1)}s`;
+
+            if (elements.slider3DBtn) elements.slider3DBtn.value = settings.btnDepth;
+            if (elements.val3DBtn) elements.val3DBtn.textContent = `${settings.btnDepth}px`;
+
+            if (elements.toggle3DFloating) elements.toggle3DFloating.checked = !!settings.floating;
+            if (elements.toggle3DGyro) elements.toggle3DGyro.checked = !!settings.gyroSpin;
+
+            if (save) {
+                try {
+                    localStorage.setItem("safesphere_3d_fx", JSON.stringify(settings));
+                } catch (e) {}
+            }
+        }
+
+        // Initial application
+        applySettings(state.settings3D, false);
+
+        // Map sliders to actions
+        const sliderBindings = [
+            { el: elements.slider3DParallax, badge: elements.val3DParallax, key: "parallax", unit: "x", format: v => Number(v).toFixed(1) },
+            { el: elements.slider3DYaw, badge: elements.val3DYaw, key: "yaw", unit: "°", format: v => v },
+            { el: elements.slider3DPitch, badge: elements.val3DPitch, key: "pitch", unit: "°", format: v => v },
+            { el: elements.slider3DElevation, badge: elements.val3DElevation, key: "elevation", unit: "px", format: v => v },
+            { el: elements.slider3DGlare, badge: elements.val3DGlare, key: "glare", unit: "%", format: v => v },
+            { el: elements.slider3DRadar, badge: elements.val3DRadar, key: "radar", unit: "s", format: v => Number(v).toFixed(1) },
+            { el: elements.slider3DGyro, badge: elements.val3DGyro, key: "gyro", unit: "s", format: v => Number(v).toFixed(1) },
+            { el: elements.slider3DBtn, badge: elements.val3DBtn, key: "btnDepth", unit: "px", format: v => v }
+        ];
+
+        sliderBindings.forEach(binding => {
+            if (!binding.el) return;
+            binding.el.addEventListener("input", (e) => {
+                const val = parseFloat(e.target.value);
+                state.settings3D[binding.key] = val;
+                if (binding.badge) binding.badge.textContent = `${binding.format(val)}${binding.unit}`;
+                applySettings(state.settings3D, true);
+
+                // Unmark preset active
+                document.querySelectorAll(".btn-preset-3d").forEach(btn => btn.classList.remove("active"));
+            });
+        });
+
+        // Toggles
+        if (elements.toggle3DFloating) {
+            elements.toggle3DFloating.addEventListener("change", (e) => {
+                state.settings3D.floating = e.target.checked;
+                applySettings(state.settings3D, true);
+            });
+        }
+        if (elements.toggle3DGyro) {
+            elements.toggle3DGyro.addEventListener("change", (e) => {
+                state.settings3D.gyroSpin = e.target.checked;
+                applySettings(state.settings3D, true);
+            });
+        }
+
+        // Preset Chips
+        document.querySelectorAll(".btn-preset-3d").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const presetKey = btn.dataset.preset;
+                if (PRESETS_3D[presetKey]) {
+                    document.querySelectorAll(".btn-preset-3d").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    state.settings3D = Object.assign({}, PRESETS_3D[presetKey]);
+                    applySettings(state.settings3D, true);
+                    if (window.soundEngine) window.soundEngine.playSwitchClick();
+                    showToast(`3D Calibration: ${btn.textContent.trim()}`, "info");
+                }
+            });
+        });
+
+        // Reset Defaults
+        if (elements.btnReset3DDefaults) {
+            elements.btnReset3DDefaults.addEventListener("click", () => {
+                state.settings3D = Object.assign({}, DEFAULT_3D_SETTINGS);
+                applySettings(state.settings3D, true);
+                document.querySelectorAll(".btn-preset-3d").forEach(b => {
+                    b.classList.toggle("active", b.dataset.preset === "tactical");
+                });
+                if (window.soundEngine) window.soundEngine.playSwitchClick();
+                showToast("3D Illusion parameters restored to default", "info");
+            });
+        }
+
+        // Modal Open / Close
+        function open3DStudio() {
+            if (elements.modal3DIllusions) {
+                elements.modal3DIllusions.classList.add("open");
+                if (window.soundEngine) window.soundEngine.playArmTone();
+            }
+        }
+        function close3DStudio() {
+            if (elements.modal3DIllusions) {
+                elements.modal3DIllusions.classList.remove("open");
+            }
+        }
+
+        if (elements.btnOpen3DStudio) elements.btnOpen3DStudio.addEventListener("click", open3DStudio);
+        if (elements.btnDepthPill) elements.btnDepthPill.addEventListener("click", open3DStudio);
+        if (elements.modal3DClose) elements.modal3DClose.addEventListener("click", close3DStudio);
+        if (elements.modal3DIllusions) {
+            elements.modal3DIllusions.addEventListener("click", (e) => {
+                if (e.target === elements.modal3DIllusions) close3DStudio();
+            });
+        }
+    }
+
+    // ================================================================
     // 3D PARALLAX TILT & SPECULAR GLARE ENGINE
     // ================================================================
     function init3DParallaxTilt() {
@@ -213,6 +459,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             el.addEventListener("mousemove", (e) => {
                 if (window.innerWidth <= 768) return;
+                const scale = state.settings3D ? state.settings3D.parallax : 1.0;
+                if (scale === 0) {
+                    el.style.transform = "";
+                    return;
+                }
+
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -225,10 +477,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (el.classList.contains("slot-card")) maxDeg = 6;
                 if (el.classList.contains("phone-device-chassis")) maxDeg = 9;
 
+                maxDeg *= scale;
+
                 const rotateX = -((y - centerY) / centerY) * maxDeg;
                 const rotateY = ((x - centerX) / centerX) * maxDeg;
 
-                el.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(12px)`;
+                if (el.classList.contains("phone-device-chassis")) {
+                    const yaw = (state.settings3D ? state.settings3D.yaw : -8) + rotateY;
+                    const pitch = (state.settings3D ? state.settings3D.pitch : 7) + rotateX;
+                    const elevation = (state.settings3D ? state.settings3D.elevation : 16) + 12;
+                    el.style.transform = `perspective(1200px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg) translateZ(${elevation}px)`;
+                } else {
+                    el.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(12px)`;
+                }
 
                 // Update specular glare reflection position
                 const glareX = ((x / rect.width) * 100).toFixed(1);
