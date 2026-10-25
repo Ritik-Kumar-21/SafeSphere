@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+ember.db
+backup_v2_3d/
+scratch/
+.DS_Store
+cloudflared

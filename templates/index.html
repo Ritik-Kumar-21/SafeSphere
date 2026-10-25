@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFE SPHERE — Tactical Fire & Emergency SMS Operations Center</title>
+    <meta name="description" content="Safe Sphere emergency response command center for dispatching real cellular SMS alerts with ₹0 free trial support and local mock fallback.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- ================================================================
+         TOP TELEMETRY HEADER
+         ================================================================ -->
+    <header class="telemetry-header">
+        <div class="brand-section">
+            <div class="brand-gyro-container">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SAFE SPHERE Logo" class="brand-logo">
+                <div class="brand-gyro-ring ring-1"></div>
+                <div class="brand-gyro-ring ring-2"></div>
+            </div>
+            <div class="brand-title">
+                SAFE SPHERE <span>EOC v2.4</span>
+            </div>
+        </div>
+
+        <div class="system-status-ribbon">
+            <div class="status-pill">
+                <span class="status-beacon active"></span>
+                <span>CORE ENGINE: ONLINE</span>
+            </div>
+
+            <div class="status-pill">
+                <span class="status-beacon warning" id="provider-beacon"></span>
+                <span id="provider-badge" class="mode-badge demo" title="Click to configure SMS gateway">DEMO SIMULATOR (₹0)</span>
+            </div>
+
+            <div class="status-pill" style="color: var(--tactical-cyan);">
+                <span id="clock-time">00:00:00 IST</span>
+            </div>
+
+            <div class="status-pill depth-indicator-pill" title="Hardware 3D Spatial Rendering & Parallax Physics Active">
+                <span class="depth-cube-3d"></span>
+                <span style="font-weight: 700; letter-spacing: 0.05em; color: var(--hazard-amber);">3D SPATIAL FX</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button id="btn-theme-toggle" class="btn-theme-pill" title="Switch Theme (Safe Sphere / Cyber Matrix / Polar Daylight)">
+                <span id="theme-icon">🌐</span>
+                <span id="theme-name">Safe Sphere</span>
+            </button>
+            <button id="btn-toggle-audio" class="btn-icon" title="Toggle Sound FX">🔊</button>
+            <button id="btn-open-settings" class="btn-icon" title="Gateway & Twilio Configuration">⚙️</button>
+        </div>
+    </header>
+
+    <!-- ================================================================
+         MAIN EOC CONTAINER
+         ================================================================ -->
+    <main class="eoc-container">
+
+        <!-- TELEMETRY KPI CARDS -->
+        <section class="telemetry-strip">
+            <div class="metric-card alert">
+                <div class="metric-label">
+                    <span>Emergency Trigger</span>
+                    <span>🚨</span>
+                </div>
+                <div class="metric-value" id="kpi-armed-status" style="color: var(--fire-red);">ARMED</div>
+                <div class="metric-sub">Hazard Strobe Ready</div>
+            </div>
+
+            <div class="metric-card success">
+                <div class="metric-label">
+                    <span>Active Cell Links</span>
+                    <span>📡</span>
+                </div>
+                <div class="metric-value" id="kpi-active-links">3 / 5</div>
+                <div class="metric-sub" id="configured-slots-count">3 of 5 Slots Assigned (₹0 Cap)</div>
+            </div>
+
+            <div class="metric-card info">
+                <div class="metric-label">
+                    <span>SMS Dispatched</span>
+                    <span>💬</span>
+                </div>
+                <div class="metric-value" id="kpi-sms-sent">0</div>
+                <div class="metric-sub">Audit-logged transmissions</div>
+            </div>
+
+            <div class="metric-card warning">
+                <div class="metric-label">
+                    <span>Incidents Logged</span>
+                    <span>📋</span>
+                </div>
+                <div class="metric-value" id="kpi-total-incidents">0</div>
+                <div class="metric-sub" id="kpi-last-incident">No alerts recorded yet</div>
+            </div>
+        </section>
+
+        <!-- COMMAND GRID: DISPATCH CONSOLE + PHONE PREVIEW -->
+        <section class="command-grid">
+
+            <!-- LEFT: EMERGENCY DISPATCH CONSOLE -->
+            <div class="console-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>🔥</span>
+                        <span>Emergency Dispatch Command Center</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--hazard-amber);">
+                        PRIORITY LEVEL 1 TRANSMISSION
+                    </div>
+                </div>
+
+                <div class="hazard-stripes"></div>
+
+                <div class="panel-body">
+
+                    <!-- REAL CELLULAR GATEWAY BANNER -->
+                    <div id="real-gateway-banner" class="real-gateway-banner">
+                        <div class="gateway-banner-content">
+                            <span class="pulse-dot"></span>
+                            <div>
+                                <strong id="gateway-banner-heading">REAL CELLULAR SMS MODE ACTIVE:</strong>
+                                <span id="gateway-banner-desc">Twilio API credentials not yet connected. Click the button to enter your Account SID, Auth Token & Twilio Phone Number to send actual SMS to phones.</span>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-banner-config-twilio" class="btn-primary" style="font-size: 0.78rem; padding: 6px 14px; white-space: nowrap;">
+                            🔑 Connect Twilio Keys
+                        </button>
+                    </div>
+
+                    <!-- SAFETY ARM SWITCH -->
+                    <div class="safety-lock-bar">
+                        <div class="safety-info">
+                            <div class="safety-title">MASTER SYSTEM ARM SWITCH</div>
+                            <div class="safety-desc">Prevents accidental broadcast transmissions during staging and drills.</div>
+                        </div>
+                        <div class="toggle-switch-container">
+                            <span id="armed-switch-label" class="switch-label" style="color: var(--fire-red);">SYSTEM ARMED</span>
+                            <label class="switch">
+                                <input type="checkbox" id="system-armed-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- PRESET SELECTOR CHIPS -->
+                    <div class="preset-selector-group">
+                        <label class="form-label">Tactical Alert Presets</label>
+                        <div class="preset-chips">
+                            <button type="button" class="preset-chip active" data-preset="fire">
+                                <span>🔥</span> Code Red: Fire & Evacuate
+                            </button>
+                            <button type="button" class="preset-chip amber" data-preset="gas">
+                                <span>💨</span> Amber: Gas / Hazard Leak
+                            </button>
+                            <button type="button" class="preset-chip" data-preset="drill">
+                                <span>🚨</span> Yellow: Muster Drill
+                            </button>
+                            <button type="button" class="preset-chip blue" data-preset="weather">
+                                <span>⛈️</span> Blue: Severe Weather
+                            </button>
+                            <button type="button" class="preset-chip" data-preset="custom">
+                                <span>✏️</span> Custom Incident
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- DISPATCH PARAMETERS -->
+                    <div class="dispatch-form-row">
+                        <div class="form-group">
+                            <label for="alert-type" class="form-label">Alert Classification</label>
+                            <select id="alert-type" class="form-select">
+                                <option value="FIRE ALERT">FIRE ALERT (CODE RED)</option>
+                                <option value="GAS LEAK HAZARD">GAS LEAK HAZARD</option>
+                                <option value="EMERGENCY DRILL">EMERGENCY DRILL</option>
+                                <option value="FACILITY EVACUATION">FACILITY EVACUATION</option>
+                                <option value="SEVERE WEATHER">SEVERE WEATHER</option>
+                                <option value="SECURITY LOCKDOWN">SECURITY LOCKDOWN</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="severity-level" class="form-label">Threat Severity</label>
+                            <select id="severity-level" class="form-select">
+                                <option value="CRITICAL">CRITICAL (Immediate Life Safety)</option>
+                                <option value="HIGH">HIGH (Urgent Response)</option>
+                                <option value="MEDIUM">MEDIUM (Caution / Pre-alert)</option>
+                                <option value="LOW">LOW (Informational / Drill)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-location" class="form-label">Zone / Incident Location</label>
+                        <input type="text" id="alert-location" class="form-input" value="Tech Hub - Main Building (All Floors)" placeholder="e.g. Wing B, Floor 2 Server Room">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-message" class="form-label">Cellular SMS Payload (Broadcast Text)</label>
+                        <textarea id="alert-message" class="form-textarea" placeholder="Type emergency message here..."></textarea>
+                        <div class="char-counter-bar">
+                            <span id="char-counter">0 / 160 chars</span>
+                            <span id="sms-credits-counter">1 SMS Credit</span>
+                        </div>
+                    </div>
+
+                    <!-- TRIGGER ZONE WITH PHYSICAL BUTTON & ABORT OVERLAY -->
+                    <div class="trigger-zone">
+                        <button type="button" id="btn-fire-emergency" class="btn-emergency-strobe">
+                            <span>⚠️</span>
+                            <span>TRANSMIT EMERGENCY SMS BROADCAST</span>
+                            <span>⚠️</span>
+                        </button>
+
+                        <!-- 3-Second Abort Countdown Overlay -->
+                        <div id="abort-countdown-overlay" class="abort-countdown-overlay">
+                            <div class="abort-message">
+                                <span>🚨 TRANSMITTING TO ALL PHONES IN</span>
+                                <span id="abort-countdown-seconds" style="font-size: 1.4rem; font-family: var(--font-mono); color: #fef08a;">3</span>
+                                <span>SECONDS...</span>
+                            </div>
+                            <button type="button" id="btn-abort-action" class="btn-abort-action">ABORT DISPATCH</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT: LIVE SMARTPHONE LOCKSCREEN SIMULATOR -->
+            <aside class="phone-simulator-panel">
+                <div class="panel-header">
+                    <div class="panel-title" style="font-size: 0.85rem;">
+                        <span>📱</span>
+                        <span>Recipient Device Preview</span>
+                    </div>
+                    <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--tactical-emerald);">LIVE MIRROR</span>
+                </div>
+
+                <div class="panel-body" style="padding: 16px 12px; align-items: center;">
+                    <div class="phone-perspective-stage">
+                        <div class="phone-device-chassis" id="phone-device-chassis">
+                            <div class="phone-island"></div>
+                            <div class="phone-screen">
+                                <div class="phone-clock-widget">
+                                    <div class="phone-time" id="phone-preview-clock">10:53</div>
+                                    <div class="phone-date" id="phone-preview-date">Sunday, October 25</div>
+                                </div>
+
+                                <div class="phone-notification-stack">
+                                    <!-- Realtime mirrored push notification -->
+                                    <div class="push-notification" id="phone-push-card">
+                                        <div class="notif-header">
+                                            <div class="notif-app">
+                                                <svg class="notif-app-icon" viewBox="0 0 24 24" fill="#ef4444">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                                </svg>
+                                                <span>MESSAGES</span>
+                                            </div>
+                                            <div class="notif-time" id="preview-notif-time">Now</div>
+                                        </div>
+                                        <div class="notif-title" id="preview-notif-title">SAFE SPHERE [FIRE ALERT]</div>
+                                        <div class="notif-body" id="preview-notif-body">
+                                            CODE RED FIRE DETECTED. Evacuate immediately via North/South fire stairwells.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="phone-bottom-bar"></div>
+                            </div>
+                        </div>
+                        <div class="phone-ambient-shadow"></div>
+                    </div>
+
+                    <!-- ₹0 Twilio Validation Quick Card -->
+                    <div class="callout-box" style="margin-top: 10px; width: 100%;">
+                        <strong>💡 ₹0 Prototype Assurance:</strong><br>
+                        Default mode is set to <strong>Demo Simulator</strong>. You can present and demo the entire evacuation drill without any credit card or external API charges.
+                    </div>
+                </div>
+            </aside>
+
+        </section>
+
+        <!-- 5-SLOT RECIPIENT TACTICAL ROSTER -->
+        <section class="roster-section">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>👥</span>
+                    <span>Authorized Emergency Phone Roster (Max 5 Recipient Slots)</span>
+                </div>
+                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+                    ENFORCED ₹0 ZERO-COST QUOTA
+                </div>
+            </div>
+
+            <div class="roster-grid" id="recipient-roster-grid">
+                <!-- Dynamically populated 5 slot cards -->
+            </div>
+        </section>
+
+        <!-- INCIDENT LOG & AUDIT CONSOLE -->
+        <section class="audit-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>📜</span>
+                    <span>Audit Trail & Cellular Gateway Transmission Log</span>
+                </div>
+                <div>
+                    <button id="btn-export-logs" class="btn-secondary" style="font-size: 0.75rem; padding: 6px 12px;">
+                        <span>📥</span> Export CSV Log
+                    </button>
+                </div>
+            </div>
+
+            <div class="audit-table-wrap">
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>TIMESTAMP (IST)</th>
+                            <th>INCIDENT REF</th>
+                            <th>RECIPIENT</th>
+                            <th>PHONE NUMBER</th>
+                            <th>DISPATCH STATUS</th>
+                            <th>LATENCY</th>
+                            <th>GATEWAY SID / CODE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audit-logs-tbody">
+                        <!-- Dynamically populated audit log rows -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================
+         MODAL: CONFIGURE RECIPIENT (SLOT 1 - 5)
+         ================================================================ -->
+    <div id="modal-recipient" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-recipient-title">Configure Recipient</div>
+                <button type="button" class="modal-close" id="modal-recipient-close">&times;</button>
+            </div>
+            <form id="recipient-form">
+                <input type="hidden" id="recipient-slot-number" value="1">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="recipient-name" class="form-input" required placeholder="e.g. Ritik Chauhan">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mobile Phone Number (E.164 Format)</label>
+                        <input type="tel" id="recipient-phone" class="form-input" required placeholder="+91 9876543210">
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                            Enter 10-digit Indian number or international number starting with <code>+91</code>.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Assigned Emergency Role</label>
+                        <select id="recipient-role" class="form-select">
+                            <option value="Incident Commander / Self">Incident Commander / Self</option>
+                            <option value="Security Desk">Security Desk</option>
+                            <option value="Floor Evac Marshal">Floor Evac Marshal</option>
+                            <option value="First Aid Lead">First Aid Lead</option>
+                            <option value="Facility Manager">Facility Manager</option>
+                            <option value="Emergency Contact">Emergency Contact</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notes / Location Details</label>
+                        <input type="text" id="recipient-notes" class="form-input" placeholder="e.g. Ground floor main entrance post">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="checkbox" id="recipient-is-active" checked style="width: 16px; height: 16px;">
+                        <label for="recipient-is-active" style="font-size: 0.82rem; color: #fff;">Arm this phone for all broadcast alerts</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btn-delete-recipient" class="btn-secondary" style="color: var(--fire-red); border-color: rgba(239, 68, 68, 0.4); margin-right: auto; display: none;">Clear Slot</button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('modal-recipient').classList.remove('open')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Recipient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         MODAL: GATEWAY SETTINGS & TWILIO CONFIGURATION
+         ================================================================ -->
+    <div id="modal-settings" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">Gateway Configuration & Twilio Setup</div>
+                <button type="button" class="modal-close" id="modal-settings-close">&times;</button>
+            </div>
+            <form id="settings-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Active SMS Dispatcher Provider</label>
+                        <select id="setting-provider-mode" class="form-select">
+                            <option value="demo">Demo Simulator (₹0 — Realistic virtual cellular routing)</option>
+                            <option value="twilio">Twilio SMS API (Sends actual SMS to real phones)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Facility / Organization Name</label>
+                        <input type="text" id="setting-facility-name" class="form-input" value="Tech Hub & Innovation Lab - Wing B">
+                    </div>
+
+                    <div class="callout-box amber" style="font-size: 0.78rem;">
+                        <strong>🔑 How to activate Real Cellular SMS for ₹0:</strong><br>
+                        1. Sign up for a free trial at <a href="https://console.twilio.com" target="_blank" style="color: var(--tactical-cyan);">twilio.com</a>.<br>
+                        2. Under <em>Phone Numbers &gt; Verified Caller IDs</em>, verify your personal Indian mobile number.<br>
+                        3. Paste your Account SID, Auth Token, and Trial Phone Number below.<br>
+                        4. Test with your own phone first using the <strong>⚡ Ping Test</strong> button!
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Twilio Account SID</label>
+                        <input type="text" id="setting-twilio-sid" class="form-input" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Twilio Auth Token</label>
+                        <input type="password" id="setting-twilio-token" class="form-input" placeholder="••••••••••••••••••••••••••••••••">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Twilio From Number</label>
+                        <input type="text" id="setting-twilio-from" class="form-input" placeholder="+1xxxxxxxxxx">
+                    </div>
+
+                    <div id="twilio-test-result" style="display: none;"></div>
+
+                    <button type="button" id="btn-test-twilio-conn" class="btn-secondary" style="width: 100%; justify-content: center;">
+                        Test Twilio API Connection
+                    </button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('modal-settings').classList.remove('open')">Cancel</button>
+                    <button type="submit" class="btn-primary">Apply Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         MODAL: LOG DETAIL INSPECTION
+         ================================================================ -->
+    <div id="modal-log-detail" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">Cellular Transmission Diagnostic</div>
+                <button type="button" class="modal-close" id="modal-log-detail-close">&times;</button>
+            </div>
+            <div class="modal-body" id="log-detail-body">
+                <!-- Dynamically populated diagnostic info -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-primary" onclick="document.getElementById('modal-log-detail').classList.remove('open')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- JAVASCRIPT ASSETS -->
+    <script src="{{ url_for('static', filename='js/audio.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
