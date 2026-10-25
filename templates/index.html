@@ -488,12 +488,12 @@
                 <button type="button" class="modal-close" id="modal-3d-close">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">
+                <p class="studio-subtitle">
                     Calibrate real-time isometric angles, 3D smartphone elevation, specular glass reflections, cursor parallax sensitivity, radar wave cycles, and gyroscope orbital rings.
                 </p>
 
                 <!-- Calibration Presets -->
-                <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">
+                <div class="studio-section-label">
                     Quick 3D Presets
                 </div>
                 <div class="studio-presets-row">
@@ -579,24 +579,24 @@
                 </div>
 
                 <!-- Toggle Options -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
-                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" id="toggle-3d-floating" checked style="width: 15px; height: 15px; accent-color: var(--tactical-cyan);">
+                <div class="studio-toggle-group">
+                    <label class="studio-toggle-label">
+                        <input type="checkbox" id="toggle-3d-floating" checked>
                         <span>Floating 3D Bobbing</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" id="toggle-3d-gyro" checked style="width: 15px; height: 15px; accent-color: var(--tactical-cyan);">
+                    <label class="studio-toggle-label">
+                        <input type="checkbox" id="toggle-3d-gyro" checked>
                         <span>Logo Gyro Spin</span>
                     </label>
                 </div>
             </div>
 
-            <div class="modal-footer" style="justify-content: space-between;">
-                <button type="button" class="btn-secondary" id="btn-reset-3d-defaults" style="font-size: 0.8rem;">
+            <div class="modal-footer" style="justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05);">
+                <button type="button" class="btn-3d-studio-reset" id="btn-reset-3d-defaults">
                     🔄 Reset Defaults
                 </button>
                 <div style="display: flex; gap: 8px;">
-                    <button type="button" class="btn-primary" onclick="document.getElementById('modal-3d-illusions').classList.remove('open')">
+                    <button type="button" class="btn-3d-studio-done" onclick="document.getElementById('modal-3d-illusions').classList.remove('open')">
                         Done
                     </button>
                 </div>
