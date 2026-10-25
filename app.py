@@ -97,16 +97,6 @@ def presentation_print():
     return render_template("presentation_print.html")
 
 
-@app.route("/api/download-pptx")
-def download_pptx():
-    """Generates and serves the SafeSphere PowerPoint presentation."""
-    pptx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "SafeSphere_EOC_Presentation.pptx")
-    if not os.path.exists(pptx_path):
-        import generate_ppt
-        generate_ppt.build_presentation(pptx_path)
-    return send_file(pptx_path, as_attachment=True, download_name="SafeSphere_EOC_Presentation.pptx")
-
-
 @app.route("/api/download-pdf")
 def download_pdf():
     """Generates and serves the official SafeSphere PDF presentation."""

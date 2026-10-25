@@ -182,7 +182,7 @@ def build_pdf_with_reportlab(output_path: str):
             "bullets": [
                 "Live Public Operations Center: https://couple-yale-cemetery-delicious.trycloudflare.com",
                 "Interactive Web Pitch Deck: https://couple-yale-cemetery-delicious.trycloudflare.com/presentation",
-                "PowerPoint Download: https://couple-yale-cemetery-delicious.trycloudflare.com/api/download-pptx",
+                "PDF Document Download: https://couple-yale-cemetery-delicious.trycloudflare.com/api/download-pdf",
                 "GitHub Open Source Repository: https://github.com/adityashukla-official/SafeSphere.git"
             ]
         }
