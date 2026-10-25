@@ -6,7 +6,7 @@ Backend Web Application & API Engine
 import os
 import csv
 import io
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, send_file
 from dotenv import load_dotenv
 
 # Load environment variables from .env if present
@@ -83,6 +83,22 @@ sms_gateway.update_twilio_credentials(sid, tok, from_num)
 def index():
     """Renders the main tactical operations dashboard."""
     return render_template("index.html")
+
+
+@app.route("/presentation")
+def presentation():
+    """Renders the executive pitch deck & product presentation."""
+    return render_template("presentation.html")
+
+
+@app.route("/api/download-pptx")
+def download_pptx():
+    """Generates and serves the SafeSphere PowerPoint presentation."""
+    pptx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "SafeSphere_EOC_Presentation.pptx")
+    if not os.path.exists(pptx_path):
+        import generate_ppt
+        generate_ppt.build_presentation(pptx_path)
+    return send_file(pptx_path, as_attachment=True, download_name="SafeSphere_EOC_Presentation.pptx")
 
 
 @app.route("/api/status", methods=["GET"])

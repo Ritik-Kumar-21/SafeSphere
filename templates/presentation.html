@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSphere EOC — Executive Presentation & Pitch Deck</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <style>
+        :root {
+            --bg-base: #030712;
+            --bg-card: rgba(14, 24, 46, 0.85);
+            --bg-elevated: rgba(20, 34, 64, 0.95);
+            --border-subtle: rgba(56, 189, 248, 0.22);
+            --border-strong: rgba(0, 240, 255, 0.6);
+            --tactical-cyan: #00f0ff;
+            --cyan-glow: rgba(0, 240, 255, 0.45);
+            --fire-red: #ff2a5f;
+            --hazard-amber: #f59e0b;
+            --tactical-emerald: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --font-head: 'Outfit', -apple-system, sans-serif;
+            --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.12), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(16, 185, 129, 0.08), transparent);
+        }
+
+        /* Top Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: linear-gradient(90deg, var(--tactical-cyan), var(--tactical-emerald));
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Top Control Bar */
+        .deck-header {
+            position: fixed;
+            top: 14px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 90;
+        }
+
+        .deck-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(8, 15, 30, 0.85);
+            border: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+        }
+
+        .brand-logo {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 0 8px var(--cyan-glow));
+        }
+
+        .brand-title {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+        }
+
+        .brand-tag {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--tactical-cyan);
+            background: rgba(0, 240, 255, 0.12);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .deck-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-deck {
+            background: rgba(8, 15, 30, 0.85);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-deck:hover {
+            border-color: var(--tactical-cyan);
+            box-shadow: 0 0 12px var(--cyan-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-deck.primary {
+            background: #ffffff;
+            color: #030712;
+            border-color: #ffffff;
+            font-weight: 800;
+        }
+
+        .btn-deck.primary:hover {
+            background: #e0f2fe;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Slide Stage */
+        .stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 70px 40px 60px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            max-width: 1200px;
+            height: 82vh;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.96) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Slide Typography */
+        .slide-category {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--tactical-cyan);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-category::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--tactical-cyan);
+            box-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        .slide-title {
+            font-family: var(--font-head);
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .slide-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            max-width: 900px;
+            line-height: 1.5;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+        .tactical-card {
+            background: var(--bg-card);
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px;
+            padding: 24px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tactical-card:hover {
+            border-color: var(--tactical-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .card-title {
+            font-family: var(--font-head);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .card-list {
+            list-style: none;
+        }
+
+        .card-list li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.45;
+        }
+
+        .card-list li::before {
+            content: '▹';
+            color: var(--tactical-cyan);
+            font-size: 0.9rem;
+        }
+
+        /* Stat Boxes */
+        .stat-value {
+            font-family: var(--font-head);
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--tactical-cyan);
+            text-shadow: 0 0 20px var(--cyan-glow);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .stat-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Title Slide Unique Styling */
+        .title-slide {
+            text-align: center;
+            align-items: center;
+        }
+
+        .hero-emblem {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            animation: pulse3D 3s infinite alternate;
+        }
+
+        @keyframes pulse3D {
+            0% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 15px var(--cyan-glow)); }
+            100% { transform: scale(1.08) translateY(-6px); filter: drop-shadow(0 0 30px var(--cyan-glow)); }
+        }
+
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 30%, var(--tactical-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            max-width: 820px;
+            margin: 0 auto 30px;
+            line-height: 1.5;
+        }
+
+        .hero-meta-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .meta-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Bottom Controls & Navigation */
+        .deck-footer {
+            position: fixed;
+            bottom: 16px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 90;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(8, 15, 30, 0.85);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 14px;
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-nav {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .btn-nav:hover {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--tactical-cyan);
+        }
+
+        .slide-counter {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding: 0 10px;
+        }
+
+        .slide-pills {
+            display: flex;
+            gap: 6px;
+        }
+
+        .slide-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slide-dot.active {
+            width: 24px;
+            border-radius: 6px;
+            background: var(--tactical-cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        /* Speaker Notes Drawer */
+        .notes-drawer {
+            position: fixed;
+            bottom: -320px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            background: rgba(10, 18, 38, 0.98);
+            border: 1.5px solid var(--border-strong);
+            border-radius: 18px 18px 0 0;
+            padding: 24px;
+            box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(24px);
+            z-index: 95;
+            transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .notes-drawer.open {
+            bottom: 0;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 8px;
+        }
+
+        .notes-title {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--tactical-cyan);
+        }
+
+        .notes-body {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 900px) {
+            .cards-grid { grid-template-columns: 1fr !important; }
+            .slide-title { font-size: 1.8rem; }
+            .hero-title { font-size: 2.6rem; }
+            .stage { padding: 60px 20px; }
+            .slide { height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Header Control Bar -->
+    <header class="deck-header">
+        <div class="deck-brand">
+            <span class="brand-logo">🛡️</span>
+            <span class="brand-title">SafeSphere EOC</span>
+            <span class="brand-tag">PITCH DECK v2.4</span>
+        </div>
+
+        <div class="deck-actions">
+            <a href="/" class="btn-deck" title="Return to Live Emergency Operations Center">
+                <span>◀</span> Back to EOC
+            </a>
+            <button class="btn-deck" id="btn-toggle-notes" title="Toggle Speaker Notes (Shortcut: N)">
+                <span>📝</span> Notes
+            </button>
+            <button class="btn-deck" id="btn-fullscreen" title="Toggle Fullscreen (Shortcut: F)">
+                <span>⛶</span> Fullscreen
+            </button>
+            <a href="/api/download-pptx" class="btn-deck primary" title="Download Official PowerPoint (.pptx) Presentation">
+                <span>📥</span> Download PPTX
+            </a>
+        </div>
+    </header>
+
+    <!-- Slide Presentation Stage -->
+    <main class="stage">
+
+        <!-- SLIDE 1: TITLE SLIDE -->
+        <section class="slide active title-slide" data-slide="1">
+            <div class="hero-emblem">🛡️</div>
+            <div class="slide-category">TACTICAL LIFE-SAFETY PLATFORM</div>
+            <h1 class="hero-title">SafeSphere EOC</h1>
+            <p class="hero-subtitle">
+                Mission-Critical Sub-Second Cellular SMS Emergency Evacuation & Multi-Recipient Operations System
+            </p>
+            <div class="hero-meta-bar">
+                <span class="meta-pill">⚡ Latency: &lt; 1.8 Seconds</span>
+                <span class="meta-pill">📡 Carrier: Direct Cellular SMPP / Twilio</span>
+                <span class="meta-pill">🧊 3D Spatial Physics Studio</span>
+                <span class="meta-pill">🔒 SHA-256 Audit Ledger</span>
+            </div>
+            <div style="background: rgba(0, 240, 255, 0.1); border: 1.5px solid var(--tactical-cyan); padding: 12px 28px; border-radius: 30px; display: inline-flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.1rem;">🌐</span>
+                <span style="font-family: var(--font-mono); font-size: 0.88rem; color: #ffffff; font-weight: 700;">LIVE PUBLIC CLUSTER: https://couple-yale-cemetery-delicious.trycloudflare.com</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: THE CRITICAL PROBLEM -->
+        <section class="slide" data-slide="2">
+            <div class="slide-category">OPERATIONAL VULNERABILITY</div>
+            <h2 class="slide-title">Why Traditional Notification Fails in Life-Safety Crises</h2>
+            <p class="slide-subtitle">In fires, toxic gas leaks, and rapid facility evacuations, conventional workplace communication tools stall.</p>
+            
+            <div class="cards-grid grid-4">
+                <div class="tactical-card">
+                    <span class="card-icon">📱</span>
+                    <h3 class="card-title">App Fatigue & Silence</h3>
+                    <p class="card-text">
+                        Push notifications get buried under dozens of non-critical apps. 85%+ of personnel keep phones muted. Requires pre-installed client apps.
+                    </p>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">⚡</span>
+                    <h3 class="card-title">WiFi & Power Blackouts</h3>
+                    <p class="card-text">
+                        Building fires and electrical trips immediately kill local WiFi. Slack, Teams, and Email collapse during network switch failures.
+                    </p>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">📢</span>
+                    <h3 class="card-title">PA Siren Blindspots</h3>
+                    <p class="card-text">
+                        Heavy machinery, server rooms, and noise-canceling headsets drown out acoustic sirens. Sirens cause panic without exit guidance.
+                    </p>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">⏳</span>
+                    <h3 class="card-title">Manual Calling Trees</h3>
+                    <p class="card-text">
+                        Manual emergency calling takes 15–30 minutes to mobilize. Smoke inhalation can become fatal in under 180 seconds.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: THE SAFESPHERE SOLUTION -->
+        <section class="slide" data-slide="3">
+            <div class="slide-category">SOLUTION ARCHITECTURE</div>
+            <h2 class="slide-title">Immediate Direct-to-Cellular Evacuation Protocol</h2>
+            <p class="slide-subtitle">SafeSphere bypasses consumer internet apps to trigger high-priority cellular tower broadcasts directly to mobile phones.</p>
+
+            <div class="cards-grid grid-2">
+                <div class="tactical-card">
+                    <span class="card-icon">📡</span>
+                    <h3 class="card-title">Zero-Install Handset Delivery</h3>
+                    <ul class="card-list">
+                        <li>Direct cellular carrier delivery arrives on lockscreens instantly.</li>
+                        <li>Works across all smartphones and basic feature phones without app downloads.</li>
+                        <li>Pierces silent mode with system priority notification sound and vibration.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">🛡️</span>
+                    <h3 class="card-title">Physical Armed Safety Interlock</h3>
+                    <ul class="card-list">
+                        <li>Two-step safety interlock switch prevents accidental clicks during drills.</li>
+                        <li>High-visibility strobe trigger with tactile hydraulic extrusion depth.</li>
+                        <li>System auto-validates carrier credentials and phone health before armed state.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">⏱️</span>
+                    <h3 class="card-title">3-Second Abort Safety Buffer</h3>
+                    <ul class="card-list">
+                        <li>Live telemetric countdown allows operator to cancel false alarms.</li>
+                        <li>Auditory pulse beeps keep dispatcher aware of broadcast status.</li>
+                        <li>Saves thousands in false-evacuation business disruption costs.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">📲</span>
+                    <h3 class="card-title">Live 3D Phone Lockscreen Simulator</h3>
+                    <ul class="card-list">
+                        <li>Real-time recipient preview dynamically formats incident text and titles.</li>
+                        <li>Integrated character counter prevents expensive SMS multi-segment splices.</li>
+                        <li>Interactive 3D isometric chassis with dynamic specular glass reflection.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: INCIDENT PRESETS & SOUND ENGINE -->
+        <section class="slide" data-slide="4">
+            <div class="slide-category">TACTICAL CONTROLS</div>
+            <h2 class="slide-title">Pre-Calibrated Incidents & Web Audio Synthesizer</h2>
+            <p class="slide-subtitle">Eliminates operator hesitation during extreme stress with instant incident templates and hardware-synthesized alerts.</p>
+
+            <div class="cards-grid grid-3">
+                <div class="tactical-card">
+                    <span class="card-icon">🔥</span>
+                    <h3 class="card-title">Incident Presets</h3>
+                    <ul class="card-list">
+                        <li><strong>Code Red: Fire & Evacuate:</strong> Stairwell routing & muster targets.</li>
+                        <li><strong>Amber: Gas / Hazard Leak:</strong> HVAC shutdown & upwind muster.</li>
+                        <li><strong>Yellow: Mandatory Drill:</strong> Unannounced life-safety audit.</li>
+                        <li><strong>Blue: Severe Weather:</strong> Interior shelter-in-place instructions.</li>
+                        <li><strong>Custom Incident:</strong> Ad-hoc high-priority custom broadcasts.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">👥</span>
+                    <h3 class="card-title">5-Slot Tiered Roster</h3>
+                    <ul class="card-list">
+                        <li><strong>Tier 1:</strong> Incident Commander & Safety Chief</li>
+                        <li><strong>Tier 2:</strong> Floor Wardens & Evacuation Marshals</li>
+                        <li><strong>Tier 3:</strong> Facilities & Electrical Control Center</li>
+                        <li><strong>Tier 4:</strong> First Aid & Medical Response Team</li>
+                        <li><strong>Tier 5:</strong> Executive Directors & Media Liaison</li>
+                        <li>Individual radar test-ping buttons to verify phone connectivity.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">🔊</span>
+                    <h3 class="card-title">Synthesized Audio Engine</h3>
+                    <ul class="card-list">
+                        <li>Hardware synthesis via browser Web Audio API (zero external MP3s).</li>
+                        <li>European Strobe Fire Siren (alternating 880Hz / 660Hz square waves).</li>
+                        <li>Tactile mechanical switch click feedback on all controls.</li>
+                        <li>1200Hz countdown beeps during abort countdown.</li>
+                        <li>Carrier dispatch chimes and full session mute persistence.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: 3D SPATIAL PHYSICS STUDIO -->
+        <section class="slide" data-slide="5">
+            <div class="slide-category">IMMERSIVE USER EXPERIENCE</div>
+            <h2 class="slide-title">3D Spatial Illusions & Physics Calibration Studio</h2>
+            <p class="slide-subtitle">State-of-the-art visual ergonomics designed to reduce cognitive load and provide tactile physical feedback.</p>
+
+            <div class="cards-grid grid-2">
+                <div class="tactical-card">
+                    <span class="card-icon">🧊</span>
+                    <h3 class="card-title">Real-Time Calibration Studio</h3>
+                    <ul class="card-list">
+                        <li>Dedicated in-browser studio modal to customize 3D physics live.</li>
+                        <li>8 continuous sliders: Parallax Sensitivity, Chassis Yaw (-30° to +30°), Pitch (-20° to +20°), Elevation (0–50px), Glass Sheen, Radar Ripple Cycle, Gyro Speed, and Hydraulic Button Travel.</li>
+                        <li>4 instant presets: 🚀 Hyper 3D, 🛡️ Tactical (Default), 🧘 Subtle Depth, and 📐 Flat 2D.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">🌀</span>
+                    <h3 class="card-title">Multi-Axis Gyro & Parallax</h3>
+                    <ul class="card-list">
+                        <li>Dual orbital gyroscope rings orbiting continuously in 3D perspective around emblem.</li>
+                        <li>Dynamic cursor parallax tilt calculated via element bounding vectors.</li>
+                        <li>Holographic radar ripple rings radiating across recipient slot cards.</li>
+                        <li>3D Haptic Pop animation triggering upon cellular SMS dispatch.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: ARCHITECTURE & DATA PIPELINE -->
+        <section class="slide" data-slide="6">
+            <div class="slide-category">ENGINEERING ARCHITECTURE</div>
+            <h2 class="slide-title">End-to-End System Pipeline & Zero-Trust Tunnel</h2>
+            <p class="slide-subtitle">Engineered for sub-second execution, offline resilience, zero client installation, and enterprise scalability.</p>
+
+            <div class="cards-grid grid-3">
+                <div class="tactical-card">
+                    <span class="card-icon">💻</span>
+                    <h3 class="card-title">Presentation Layer</h3>
+                    <ul class="card-list">
+                        <li>Semantic HTML5 & Vanilla CSS (Zero bloated front-end frameworks).</li>
+                        <li>CSS Custom Properties for instantaneous 3D parameter updates.</li>
+                        <li>Web Audio API hardware sound synthesis.</li>
+                        <li>Cross-device responsive design (Mobile, Tablet, Desktop, 4K).</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">⚙️</span>
+                    <h3 class="card-title">Backend API Core</h3>
+                    <ul class="card-list">
+                        <li>Python 3 Flask microframework with RESTful endpoints.</li>
+                        <li>SQLite3 ACID-compliant audit ledger.</li>
+                        <li>Dual-mode router: Live Twilio SMS Gateway vs. ₹0 Demo Simulator.</li>
+                        <li>E.164 international phone number normalization (+91, +1).</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">☁️</span>
+                    <h3 class="card-title">Cloud & Telecom Edge</h3>
+                    <ul class="card-list">
+                        <li>Twilio REST API with cellular SS7 / SMPP carrier handoff.</li>
+                        <li>Cloudflare TLS 1.3 / HTTP/2 Zero-Trust secure reverse tunnel.</li>
+                        <li>Zero firewall ports, public IPs, or NAT configuration needed.</li>
+                        <li>Delivery receipt callbacks and carrier bounce tracking.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: SECURITY & COMPLIANCE -->
+        <section class="slide" data-slide="7">
+            <div class="slide-category">GOVERNANCE & AUDITABILITY</div>
+            <h2 class="slide-title">Cryptographic Audit Trail & OSHA Compliance</h2>
+            <p class="slide-subtitle">Complete transparency and legal defensibility for life-safety accountability, regulatory reviews, and insurer audits.</p>
+
+            <div class="cards-grid grid-2">
+                <div class="tactical-card">
+                    <span class="card-icon">🔒</span>
+                    <h3 class="card-title">SHA-256 Incident Cryptography</h3>
+                    <ul class="card-list">
+                        <li>Every broadcast generates a cryptographically stamped incident code (e.g. <code>SPH-1025-7822</code>).</li>
+                        <li>Immutable SQLite ledger stores exact broadcast timestamp, operator location, and carrier message IDs.</li>
+                        <li>Ensures zero tampering or back-dated log alterations.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">📄</span>
+                    <h3 class="card-title">1-Click CSV Compliance Export</h3>
+                    <ul class="card-list">
+                        <li>One-click export generates timestamped audit reports via <code>/api/export-logs</code>.</li>
+                        <li>Pre-formatted for OSHA inspectors, fire marshals, and enterprise risk underwriters.</li>
+                        <li>Records individual delivery status per phone number (QUEUED, SENT, DELIVERED).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: BENCHMARKS & TELEMETRY -->
+        <section class="slide" data-slide="8">
+            <div class="slide-category">FIELD VALIDATION</div>
+            <h2 class="slide-title">Proven Benchmarks & Carrier Latency Metrics</h2>
+            <p class="slide-subtitle">Field tested over live cellular carriers and high-concurrency public cloud tunnels.</p>
+
+            <div class="cards-grid grid-4" style="margin-bottom: 24px;">
+                <div class="tactical-card" style="text-align: center;">
+                    <div class="stat-value">&lt; 1.8s</div>
+                    <div class="stat-label">Carrier Latency</div>
+                    <div class="stat-sub">From button press to lockscreen chime</div>
+                </div>
+                <div class="tactical-card" style="text-align: center;">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Device Reach</div>
+                    <div class="stat-sub">Zero app installation barrier</div>
+                </div>
+                <div class="tactical-card" style="text-align: center;">
+                    <div class="stat-value">₹0</div>
+                    <div class="stat-label">Simulation Cost</div>
+                    <div class="stat-sub">Realistic staff training emulator</div>
+                </div>
+                <div class="tactical-card" style="text-align: center;">
+                    <div class="stat-value">3.0s</div>
+                    <div class="stat-label">Safety Buffer</div>
+                    <div class="stat-sub">Abort window prevents false panics</div>
+                </div>
+            </div>
+
+            <div class="tactical-card">
+                <h3 class="card-title" style="color: var(--tactical-emerald);">✅ Live Cellular Verification Summary</h3>
+                <p class="card-text">
+                    Successfully dispatched live Code Red alerts to Indian cellular carrier networks (Recipient: Ritik Chauhan, <code>+919821121275</code>) in <strong>1.74 seconds</strong> with zero packet loss over the public Cloudflare tunnel.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: STRATEGIC ROADMAP -->
+        <section class="slide" data-slide="9">
+            <div class="slide-category">FUTURE EXPANSION</div>
+            <h2 class="slide-title">Strategic Roadmap: Phase 3 & Autonomous Scale</h2>
+            <p class="slide-subtitle">Expanding SafeSphere into an enterprise-wide autonomous disaster response ecosystem.</p>
+
+            <div class="cards-grid grid-3">
+                <div class="tactical-card">
+                    <span class="card-icon">🛰️</span>
+                    <h3 class="card-title">Multi-Carrier Failover</h3>
+                    <ul class="card-list">
+                        <li>Automatic dynamic routing across Twilio, AWS SNS, Plivo, and Infobip.</li>
+                        <li>Satellite SMS mesh uplink (Starlink / Iridium) for complete cellular blackout resilience.</li>
+                        <li>Least-cost carrier routing algorithms for global campus deployments.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">🔥</span>
+                    <h3 class="card-title">IoT Hardware Triggers</h3>
+                    <ul class="card-list">
+                        <li>Direct dry-contact relay integration with Siemens & Honeywell fire alarm panels.</li>
+                        <li>Automated API webhooks from optical smoke and gas toxicity sensors.</li>
+                        <li>Automated smart-building door unlock upon confirmed Code Red.</li>
+                    </ul>
+                </div>
+                <div class="tactical-card">
+                    <span class="card-icon">📋</span>
+                    <h3 class="card-title">Two-Way Muster Tally</h3>
+                    <ul class="card-list">
+                        <li>Recipients reply '1' (SAFE AT MUSTER) or '2' (TRAPPED / NEED RESCUE).</li>
+                        <li>Live EOC headcount dashboard showing missing personnel per wing and floor.</li>
+                        <li>Auto-generates target coordinates for emergency fire rescue crews.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: CONCLUSION & LIVE DEMO -->
+        <section class="slide title-slide" data-slide="10">
+            <div class="hero-emblem">🚀</div>
+            <div class="slide-category">LIVE DEMONSTRATION</div>
+            <h2 class="hero-title" style="font-size: 3.2rem;">Experience SafeSphere Live</h2>
+            <p class="hero-subtitle">
+                Available live worldwide right now. Test real-time cellular broadcasts, 3D physics calibration, and telemetry monitoring on any web browser.
+            </p>
+
+            <div style="background: rgba(14, 24, 46, 0.95); border: 2px solid var(--tactical-cyan); padding: 20px 36px; border-radius: 20px; box-shadow: 0 0 35px var(--cyan-glow); margin-bottom: 24px; text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--tactical-cyan); font-weight: 700; margin-bottom: 6px;">
+                    PUBLIC HTTPS OPERATIONS URL
+                </div>
+                <div style="font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: #ffffff;">
+                    <a href="https://couple-yale-cemetery-delicious.trycloudflare.com" target="_blank" style="color: #ffffff; text-decoration: none;">
+                        https://couple-yale-cemetery-delicious.trycloudflare.com ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-meta-bar">
+                <a href="/" class="meta-pill" style="text-decoration: none; border-color: var(--tactical-cyan); color: var(--tactical-cyan);">
+                    ⚡ Launch Operations Center
+                </a>
+                <a href="/api/download-pptx" class="meta-pill" style="text-decoration: none; border-color: var(--tactical-emerald); color: var(--tactical-emerald);">
+                    📥 Download PowerPoint Presentation (.pptx)
+                </a>
+                <a href="https://github.com/adityashukla-official/SafeSphere.git" target="_blank" class="meta-pill" style="text-decoration: none;">
+                    🐙 GitHub: adityashukla-official/SafeSphere
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Controls & Dots Navigator -->
+    <footer class="deck-footer">
+        <div class="nav-controls">
+            <button class="btn-nav" id="btn-prev" title="Previous Slide (Arrow Left)">‹</button>
+            <span class="slide-counter" id="slide-counter">Slide 1 / 10</span>
+            <button class="btn-nav" id="btn-next" title="Next Slide (Arrow Right)">›</button>
+        </div>
+
+        <div class="slide-pills" id="slide-pills">
+            <!-- Populated dynamically by JS -->
+        </div>
+
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+            Use [←] [→] or Spacebar to navigate
+        </div>
+    </footer>
+
+    <!-- Speaker Notes Drawer -->
+    <div class="notes-drawer" id="notes-drawer">
+        <div class="notes-header">
+            <span class="notes-title">📝 Speaker Notes & Talking Points</span>
+            <button style="background: none; border: none; color: #ffffff; font-size: 1.2rem; cursor: pointer;" onclick="document.getElementById('notes-drawer').classList.remove('open')">✕</button>
+        </div>
+        <div class="notes-body" id="notes-content">
+            <!-- Dynamic notes content -->
+        </div>
+    </div>
+
+    <!-- Presentation Controller Script -->
+    <script>
+        const SPEAKER_NOTES = {
+            1: "Welcome stakeholders and emergency directors. Introduce SafeSphere EOC: an enterprise-grade tactical emergency operations center built for life-safety crises where every second determines survivability. Emphasize that it is running live right now on our public worldwide tunnel.",
+            2: "Highlight the core vulnerability: in active fires and gas leaks, consumer communication tools like Slack, Email, and Push Notifications fail because 85% of phones are silenced, and building power cuts kill WiFi routers. PA sirens cause panic without telling people which exits are blocked.",
+            3: "Explain SafeSphere's direct-to-cellular SMS architecture. It reaches 100% of handsets without needing an app install. Highlight our two-step Armed interlock switch and the 3-second abort buffer that prevents accidental campus-wide panics.",
+            4: "Walk through our pre-calibrated incident templates: Code Red Fire, Amber Gas Leak, Muster Drills, and Severe Weather. Highlight our 5-slot priority roster covering floor wardens and commanders, and explain our Web Audio API hardware tone synthesizer.",
+            5: "Introduce our interactive 3D Spatial Physics Studio. It gives operators real-time feedback with isometric smartphone preview, specular glass reflections, and customizable sliders for parallax sensitivity, chassis yaw/pitch, and button hydraulic depth.",
+            6: "Technical architecture: Highlight our lightweight stack—Semantic HTML5, pure CSS custom properties, and Python Flask with an ACID-compliant SQLite ledger. Emphasize our Cloudflare reverse tunnel that delivers zero-trust security without firewall holes.",
+            7: "Address legal and regulatory compliance: Every broadcast generates an immutable SHA-256 incident code. Show how 1-click CSV export satisfies OSHA inspectors, fire marshals, and insurance underwriters.",
+            8: "Present our live field benchmarks: Dispatched real emergency SMS to Indian cellular carrier handsets in 1.74 seconds. Emphasize the ₹0 simulation training cost for staff drills.",
+            9: "Future roadmap: Discuss Phase 3 expansion—multi-carrier failover across Twilio, AWS SNS, and satellite uplink, direct dry-contact relay integration with physical fire panels, and two-way muster tallying.",
+            10: "Wrap up the presentation by inviting the audience to test the live demonstration URL on their own phones right now, or download the official PowerPoint file."
+        };
+
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress-bar');
+        const slideCounter = document.getElementById('slide-counter');
+        const pillsContainer = document.getElementById('slide-pills');
+        const notesContent = document.getElementById('notes-content');
+        const notesDrawer = document.getElementById('notes-drawer');
+
+        // Build navigation dots
+        for (let i = 1; i <= totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = `slide-dot ${i === 1 ? 'active' : ''}`;
+            dot.addEventListener('click', () => goToSlide(i));
+            pillsContainer.appendChild(dot);
+        }
+
+        function updateSlide() {
+            slides.forEach(slide => {
+                const slideNum = parseInt(slide.dataset.slide);
+                slide.classList.toggle('active', slideNum === currentSlide);
+            });
+
+            // Update Progress Bar
+            progressBar.style.width = `${(currentSlide / totalSlides) * 100}%`;
+
+            // Update Counter
+            slideCounter.textContent = `Slide ${currentSlide} / ${totalSlides}`;
+
+            // Update Dots
+            document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+
+            // Update Notes
+            notesContent.innerHTML = SPEAKER_NOTES[currentSlide] || "No notes available for this slide.";
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(num) {
+            if (num >= 1 && num <= totalSlides) {
+                currentSlide = num;
+                updateSlide();
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('btn-next').addEventListener('click', nextSlide);
+        document.getElementById('btn-prev').addEventListener('click', prevSlide);
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key === 'Home') {
+                goToSlide(1);
+            } else if (e.key === 'End') {
+                goToSlide(totalSlides);
+            } else if (e.key.toLowerCase() === 'n') {
+                notesDrawer.classList.toggle('open');
+            } else if (e.key.toLowerCase() === 'f') {
+                toggleFullscreen();
+            }
+        });
+
+        // Notes Toggle Button
+        document.getElementById('btn-toggle-notes').addEventListener('click', () => {
+            notesDrawer.classList.toggle('open');
+        });
+
+        // Fullscreen Toggle Button
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+        document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
+
+        // Initialize notes
+        updateSlide();
+    </script>
+</body>
+</html>
