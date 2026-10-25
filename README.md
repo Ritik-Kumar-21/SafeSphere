@@ -1,103 +1,129 @@
-# SAFE SPHERE — Fire & Emergency SMS Operations Platform
-> Tactical Emergency Operations Center (EOC) & Cellular Alert Gateway  
-> **Python · Flask · SQLite · Twilio SMS API · Tactical Web Interface**
+# 🛡️ SAFE SPHERE — Emergency Operations Center & Cellular Alert Gateway
+> **Tactical Emergency Operations Center (EOC) · Real-Time Incident Response · Live Twilio SMS Gateway**  
+> *Python · Flask · SQLite · Vanilla CSS 3D Animations · Twilio Cellular API*
 
-SAFE SPHERE is a fully functional, live emergency broadcast platform designed to dispatch life-safety cellular SMS alerts to up to five recipient phones with **₹0 hosting, zero paid database, and zero software subscriptions**.
+SAFE SPHERE is a live, mission-critical emergency broadcast platform engineered to dispatch life-safety cellular SMS alerts to physical phones with **₹0 hosting, zero paid database, and zero software subscriptions**.
 
-It includes an integrated **Tactical Demo Engine** so you can present or test the entire emergency evacuation drill risk-free without external API failures, plus a native **Twilio SMS Gateway** for real cellular delivery to physical phones.
+It includes a tactile **3D Operations Center Interface** (interactive 3D push buttons, isometric smartphone chassis simulator, holographic radar wave telemetry, cursor parallax tilt) plus a native **Twilio SMS Gateway** for real cellular delivery to recipient phones.
 
 ---
 
-## ⚡ Quick Start on Mac (Local Prototype)
+## ⚡ Quick Start — How to Run from GitHub
 
-Open Terminal in this directory (`ember_fire_sms`) and run:
+Follow these simple steps on any Mac, Linux, or Windows (WSL) machine:
 
-### Step 1 — Create and activate virtual environment
+### 1. Clone the Repository
+```bash
+git clone https://github.com/adityashukla-official/SafeSphere.git
+cd SafeSphere
+```
+
+### 2. Create and Activate Virtual Environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
+*(On Windows PowerShell: `.\.venv\Scripts\Activate.ps1`)*
 
-### Step 2 — Install dependencies
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 3 — Environment configuration
+### 4. Create Environment File
 ```bash
 cp .env.example .env
 ```
-*(By default, `SMS_PROVIDER=demo` is selected so you can immediately explore and present without any API setup).*
+*(By default, `SMS_PROVIDER=demo` is pre-configured so you can immediately explore and present the entire platform without any API setup. To send real SMS to physical phones, add your free Twilio trial credentials to `.env`).*
 
-### Step 4 — Launch the application
+### 5. Start the Application
 ```bash
 python app.py
 ```
-Open **[http://127.0.0.1:5000](http://127.0.0.1:5000)** in your web browser.
+Open **[http://127.0.0.1:5001](http://127.0.0.1:5001)** in your browser!
+
+---
+
+## 🌐 How to Run with a Free Live Public HTTPS URL
+
+If you want to access the website from your mobile phone or share it with others online without localhost:
+
+```bash
+chmod +x start_live.sh
+./start_live.sh
+```
+
+This executable launcher:
+1. Boots Flask locally on port `5001`.
+2. Automatically opens an encrypted **Cloudflare Tunnel** giving you a public HTTPS URL (e.g. `https://xxxx.trycloudflare.com`) accessible from any device worldwide at ₹0 cost.
 
 ---
 
 ## 📱 Features Included
 
-- **Mission-Critical EOC Command Interface**: Dark tactical aesthetic with high-visibility hazard crimson and amber accents, live digital timecode clock, and real-time operational status beacons.
-- **Master Arm/Disarm Safety Switch**: Prevents accidental triggers during briefings and routine checks.
-- **Physical Emergency Strobe Button with 3-Second Abort Countdown**: Click the crimson button to initiate an abortable 3-second transmission window with tactile audio feedback.
-- **5-Slot Recipient Roster (Enforced ₹0 Cap)**:
+- **3D Tactical EOC Interface**:
+  - Mechanical hydraulic 3D emergency broadcast button with abort timer.
+  - Floating 3D isometric smartphone preview reflecting live messages.
+  - 3D cursor-following parallax tilt and specular glare physics.
+  - Holographic 3D radar pulse waves on recipient cards.
+  - Dual-axis rotating gyroscope gimbal rings.
+- **5-Slot Recipient Management (Enforced ₹0 Cap)**:
   - Add, edit, mute, or remove up to 5 responder phone numbers.
-  - Automatically formats Indian (`+91`) mobile numbers to E.164 standard.
-  - **⚡ Individual Ping Test**: Test a single recipient's phone without triggering an all-facility alarm.
-- **Live Smartphone Lockscreen Simulator**: Interactive iPhone mockup that mirrors the emergency push notification banner in real time as you compose the broadcast.
-- **Web Audio Klaxon & Sound System**: Synthesized emergency sirens, switch clicks, and pings without broken external audio files (includes one-click mute).
-- **SQLite Database**:
-  - Automatically initializes `ember.db` with incident logs, recipient rosters, and system settings.
-- **Live Gateway Switcher**: Switch between `demo` and `twilio` modes directly from the UI without restarting the server.
-- **Audit Trail & CSV Export**: Detailed log of every broadcast, Twilio SID, delivery latency, and response codes.
+  - Individual cellular ping tests to verify phones before an actual broadcast.
+- **Real Twilio Cellular SMS Integration**:
+  - Direct carrier delivery to verified physical mobile phones.
+  - Automatic template fallback for trial number routing.
+- **SQLite Audit Trail**:
+  - Automatically initializes `ember.db`.
+  - Records every incident, carrier delivery latency, SID, and status.
+  - One-click CSV audit log export.
+- **Web Audio Klaxon & Sound System**:
+  - Synthesized dual-tone emergency sirens, relay clicks, and pings directly via Web Audio API.
+- **100% Mobile Responsive**:
+  - Scales seamlessly from 320px phone screens to 4K desktop command centers.
 
 ---
 
-## 🔑 Activating Real SMS to Indian Phones (₹0 Twilio Trial)
+## 🔑 Activating Real SMS to Physical Phones (₹0 Twilio Trial)
 
-Twilio offers a free trial balance (typically ~$15) when you sign up. Because it's a trial, Twilio enforces two safety rules:
-
-1. **Verified Recipients Only**: You can only send SMS to numbers you have verified under your Twilio account.
-2. **SMS Geo-Permissions**: Twilio must have permission enabled to route messages to India (+91).
-
-### Step-by-Step Validation:
-1. Create a free account at [twilio.com](https://console.twilio.com/).
-2. In the Twilio Console, go to **Phone Numbers** > **Manage** > **Verified Caller IDs**.
-3. Add and verify your personal Indian mobile number via the one-time OTP SMS.
-4. Go to **Messaging** > **Settings** > **Geo Permissions** and ensure **India** is checked.
-5. In your EMBER dashboard, click the **⚙️ (Settings)** icon in the top header.
-6. Switch provider to **Twilio SMS API**, enter your `Account SID`, `Auth Token`, and your assigned Twilio Phone Number, then click **Apply Settings**.
-7. In the Recipient Roster, set your verified phone in **Slot 1**, then click **⚡ Ping Test**.
-8. Your physical phone will buzz with the live EMBER verification SMS!
+1. Sign up for a free trial at [twilio.com/console](https://console.twilio.com/).
+2. In the Twilio Console, go to **Phone Numbers** > **Manage** > **Verified Caller IDs** and verify your phone number via OTP SMS.
+3. Open `.env` and set:
+   ```env
+   SMS_PROVIDER=twilio
+   TWILIO_ACCOUNT_SID=your_account_sid_here
+   TWILIO_AUTH_TOKEN=your_auth_token_here
+   TWILIO_FROM_NUMBER=your_assigned_trial_number_here
+   ```
+4. Restart `python app.py`.
+5. Enter your phone in **Slot 1** on the dashboard and click **⚡ Ping Test** to receive a real SMS!
 
 ---
 
 ## 🛠️ Project Structure
 
 ```
-ember_fire_sms/
-├── app.py                 # Flask server & REST API endpoints
+SafeSphere/
+├── app.py                 # Flask web backend & REST API endpoints
 ├── database.py            # SQLite database schema, logger, and queries
 ├── sms_service.py         # Twilio client integration & Demo gateway simulator
-├── requirements.txt       # Python dependencies
+├── requirements.txt       # Python dependencies (Flask, twilio, python-dotenv)
 ├── .env.example           # Environment template
-├── .env                   # Local environment file
-├── ember.db               # SQLite database file (auto-created)
+├── start_live.sh          # 1-click launcher for Flask + Cloudflare public tunnel
 ├── static/
 │   ├── css/
-│   │   └── style.css      # Mission-critical tactical EOC styling
+│   │   └── style.css      # 3D transforms, themes, and responsive design
 │   ├── js/
-│   │   ├── app.js         # Countdown timer, lockscreen mirror, API calls
-│   │   └── audio.js       # Web Audio API sound synthesis engine
+│   │   ├── app.js         # 3D parallax engine, countdown, telemetry
+│   │   └── audio.js       # Web Audio API siren synthesizer
 │   └── img/
-│       └── logo.svg       # Tactical flame insignia
+│       ├── logo.svg       # Vector Safe Sphere defense emblem
+│       └── campus-courtyard.jpg
 └── templates/
-    └── index.html         # Emergency command dashboard
+    └── index.html         # Operations center dashboard
 ```
 
 ---
 
 ## 🛡️ License
-Prototype demonstration build — Free for educational and emergency preparedness prototyping.
+Prototype demonstration build — Free for educational, hackathon, and emergency preparedness prototyping.
