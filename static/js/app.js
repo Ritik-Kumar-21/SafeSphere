@@ -758,6 +758,9 @@ document.addEventListener("DOMContentLoaded", () => {
             clearInterval(state.abortCountdownTimer);
             state.abortCountdownTimer = null;
         }
+        if (window.soundEngine && typeof window.soundEngine.stopEmergencyAlarm === "function") {
+            window.soundEngine.stopEmergencyAlarm();
+        }
         elements.abortOverlay.classList.remove("active");
         window.soundEngine.playSwitchClick();
         showToast("EMERGENCY BROADCAST ABORTED BY OPERATOR", "warning");
@@ -767,8 +770,10 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.btnFireEmergency.disabled = true;
         elements.btnFireEmergency.innerHTML = `<span>⏳</span> TRANSMITTING CELLULAR BROADCAST...`;
 
-        // Play authentic emergency siren
-        window.soundEngine.playEmergencyAlarm();
+        // Play authentic emergency siren for 5 seconds
+        if (window.soundEngine) {
+            window.soundEngine.playEmergencyAlarm(5.0);
+        }
 
         // Animate phone push preview
         animatePhonePush();
@@ -791,7 +796,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (data.success) {
                 showToast(`🚨 BROADCAST SENT (${data.incident_code}): ${data.success_count} Dispatched, ${data.failure_count} Failed`, "success");
-                window.soundEngine.playSuccessChime();
+                // Delay triumph chime until 5.0-second emergency siren finishes
+                setTimeout(() => {
+                    if (window.soundEngine) window.soundEngine.playSuccessChime();
+                }, 5000);
             } else {
                 showToast(`Broadcast Error: ${data.message}`, "error");
             }
